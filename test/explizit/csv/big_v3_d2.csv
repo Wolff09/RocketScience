@@ -1,0 +1,10 @@
+init_0,init_1,(true),var_0,(true)
+init_1,init_2,(true),var_1,(true)
+init_2,init_3,(true),var_2,(true)
+init_3,btree_,(&) (&) var_0 var_1 var_2
+btree_,btree_0,(&) (&) var_0 var_1 var_2
+btree_0,btree_00,(&) (&) var_0 var_1 var_2
+btree_0,btree_01,(&) (&) var_0 var_1 var_2
+btree_,btree_1,(&) (&) var_0 var_1 var_2
+btree_1,btree_10,(&) (&) var_0 var_1 var_2
+btree_1,btree_11,(&) (&) var_0 var_1 var_2

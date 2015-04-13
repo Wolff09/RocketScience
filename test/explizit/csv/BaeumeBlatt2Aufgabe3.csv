@@ -1,0 +1,5 @@
+prewhile,while,(true),x,(true),y,(true)
+while,if,x,y,(!) x
+while,eof,(!) x
+if,while,(!) y,x,(!) y
+if,while,y
