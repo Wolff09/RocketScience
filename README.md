@@ -24,6 +24,8 @@ It is implemented in C++ and integrates the following techniques:
 
 Just `make` the project. The result can be found in the `build` folder
 
+*Tested on Mac OS X Yosemite 10.10.3 with Command Line Tools 6.2.*
+
 
 ## Usage
 
