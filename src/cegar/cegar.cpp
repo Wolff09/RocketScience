@@ -48,12 +48,15 @@ void refine_predicates(ast::PredicateList& preds, const ast::Program& prog, cons
 	std::vector<ast::Expr*> constraints = compute_constraints(trace);
 	assert(constraints.size() == trace.size());
 
+	/*output*/std::cout << "/**************** BEGIN TRACE ****************/" << std::endl;
 	for (std::size_t i = 0; i < trace.size(); i++) {
-		trace.at(i)->prettyprint(std::cout, 1);
-		std::cout << "          * ";
-		constraints.at(i)->prettyprint(std::cout);
-		std::cout << std::endl;
+		/*output*/trace.at(i)->prettyprint(std::cout, 1);
+		/*output*///std::cout << "          * ";
+		/*output*///constraints.at(i)->prettyprint(std::cout);
+		/*output*///std::cout << std::endl;
 	}
+	/*output*/std::cout << "/***************** END TRACE *****************/" << std::endl;
+	/*output*/std::cout << std::endl;
 
 	std::vector<ast::Expr*> interpolants = compute_interpolants(prog, trace, constraints);
 	assert(constraints.size() == interpolants.size() + 1);
@@ -67,6 +70,7 @@ void refine_predicates(ast::PredicateList& preds, const ast::Program& prog, cons
 	}
 	interpolants.clear();
 
+	/*output*/std::cout << "/************** BEGIN REFINEMENT *************/" << std::endl;
 	for (ast::Expr* e : newones) {
 		assert(e->is_well_scoped());
 		const ast::FunDef* scope = e->scope();
@@ -79,6 +83,7 @@ void refine_predicates(ast::PredicateList& preds, const ast::Program& prog, cons
 			std::cout << std::endl;
 		}
 	}
+	/*output*/std::cout << "/*************** END REFINEMENT **************/" << std::endl;
 
 	preds.validate(prog);
 }
@@ -89,7 +94,7 @@ void refine_predicates(ast::PredicateList& preds, const ast::Program& prog, cons
  ******************************************************************************/
 
 bool cegar::prove(std::string filename) {
-	auto foo = clock();
+	auto clk_begin = clock();
 
 	std::unique_ptr<ast::Program> program, abstract;
 	std::unique_ptr<ast::PredicateList> predicates;
@@ -112,19 +117,21 @@ bool cegar::prove(std::string filename) {
 		cfg.reset(abstract->cfg());
 
 		/*output*/predicates->prettyprint(std::cout);
+		/*output*/std::cout << std::endl;
 		/*output*/abstract->prettyprint(std::cout);
+		/*output*/std::cout << std::endl;
 
 		// STEP 2: reachability analysis; search for counterexample
 		BDD init = cfg->encode(INIT);
 		BDD bad = cfg->encode(FAIL);
 		BDD reachset = symbolic::reachable(*cfg, init, bad);
 		if ((reachset & bad) == cfg->zero()) {
-			auto bar = clock();
 			/*output*/std::cout << std::endl;
 			/*output*/std::cout << "   +---------------------------+" << std::endl;
 			/*output*/std::cout << "   | Your programm is CORRECT! |" << std::endl;
 			/*output*/std::cout << "   +---------------------------+" << std::endl;
-			std::cout << "Total Time Taken: " << (bar-foo)/1000.0/1000.0 << "s" << std::endl;
+			/*output*/std::cout << std::endl;
+			/*output*/std::cout << "Total Time Taken: " << (clock()-clk_begin)/1000/1000.0 << "s" << std::endl;
 			return true; // if no bad state is reachable, we are done
 		}
 
@@ -135,6 +142,8 @@ bool cegar::prove(std::string filename) {
 			/*output*/std::cout << "   +-------------------------+" << std::endl;
 			/*output*/std::cout << "   | Your programm is WRONG! |" << std::endl;
 			/*output*/std::cout << "   +-------------------------+" << std::endl;
+			/*output*/std::cout << std::endl;
+			/*output*/std::cout << "Total Time Taken: " << (clock()-clk_begin)/1000/1000.0 << "s" << std::endl;
 			return false;
 		}
 
@@ -147,12 +156,13 @@ bool cegar::prove(std::string filename) {
 			/*output*/std::cout << "   +----------------------+" << std::endl;
 			/*output*/std::cout << "   | Sorry, CEGAR failed! |" << std::endl;
 			/*output*/std::cout << "   +----------------------+" << std::endl;
+			/*output*/std::cout << std::endl;
+			/*output*/std::cout << "Total Time Taken: " << (clock()-clk_begin)/1000/1000.0 << "s" << std::endl;
 			assert(false);
 		}
 
 		loop_count++;
-		assert(loop_count < 25); // don't let it run forever
-		if (loop_count > 4) break;
+		if (loop_count > 20) break; // don't let it run forever
 	}
 	
 	cfg.reset();
