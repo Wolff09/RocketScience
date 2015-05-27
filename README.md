@@ -16,7 +16,7 @@ It is implemented in C++ and integrates the following techniques:
 * Boost >= 1.57 (C++11 support)
 * CMake >= 3.1.0
 * [Z3](http://z3.codeplex.com) >= 4.3.2 (with C++ bindings)
-* ~~[parserlib](axilmar/parserlib)~~ (included)
+* ~~[parserlib](/axilmar/parserlib)~~ (included)
 * ~~[CUDD](http://vlsi.colorado.edu/~fabio/CUDD/)~~ (included)
 
 
